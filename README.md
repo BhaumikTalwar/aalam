@@ -1,2 +1,15 @@
 # aalam
-A General Purpose JavaScript ECS library. Heavily inspired by EnTT and its architecture.  Currently In Development
+
+To install dependencies:
+
+```bash
+bun install
+```
+
+To run:
+
+```bash
+bun run src/index.js
+```
+
+This project was created using `bun init` in bun v1.3.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.

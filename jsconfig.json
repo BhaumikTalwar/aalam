@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": true,
+
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["src"]
+}
