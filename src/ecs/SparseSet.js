@@ -64,7 +64,11 @@ export class SparseSet {
     constructor(config = DefaultSparseSetOptions) {
         if (!config.pageSize || (config.pageSize & (config.pageSize - 1)) !== 0) throw new Error("pageSize must be a power of 2");
         if (config.pageSize < 128) throw new Error("pageSize must be at least 128");
-        if (!config.typedArray || !config.entityHandler || !config.poolSize) throw new Error("Incorrect Config Passed");
+        if (config.typedArray == null ||
+            config.entityHandler == null ||
+            config.poolSize == null) {
+            throw new Error("Incorrect Config Passed");
+        }
 
         this.#pageSize = config.pageSize;
         this.entityHandler = config.entityHandler;
