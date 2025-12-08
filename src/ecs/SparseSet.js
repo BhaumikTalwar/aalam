@@ -7,6 +7,14 @@ import { EntityHandleMedium } from "./EntityHandle";
  * @import {EntityHandle} from './EntityHandle.js'
  */
 
+/**
+ * @typedef {object} SparseSetIterator
+ * @property {number} index The current index
+ * @property {SparseSet} self The Current Store refrence
+ * @property {() => EntityID | null} next To get the next item in the store
+ * @property {() => void} reset To reset teh iterator
+ */
+
 /** @constant TOMBSTONE - To mark the Sparse Array elem to not contain enty in dense array */
 const TOMBSTONE = -1;
 
@@ -346,6 +354,65 @@ export class SparseSet {
         }
 
         return SUCCESS_OPERATION;
+    }
+
+    /**
+     * Iterator to Entities in the sparse Set
+     * @returns {SparseSetIterator} the iterator to the sparse set
+     */
+    Iterator() {
+        return {
+            index: 0,
+            self: this,
+
+            /**
+             * To get the next Entity in the Dense List
+             * @returns {EntityID | null} Next Entity in the densee list
+             */
+            next() {
+                if (this.index >= this.self.#length) return null;
+
+                const ent = this.self.#dense[this.index];
+                this.index += 1;
+                return ent;
+            },
+
+            /**
+             * To reset the iterator
+             */
+            reset() {
+                this.index = 0;
+            },
+        };
+    }
+
+    /**
+     * Reverse Iterator to Entities in the sparse Set
+     * @returns {SparseSetIterator} the reverse iterator to the sparse set
+     */
+    ReverseIterator() {
+        return {
+            index: this.#length,
+            self: this,
+
+            /**
+             * To get the next Entity in the Dense List
+             * @returns {EntityID | null} Next Entity in the densee list
+             */
+            next() {
+                if (this.index <= 0) return null;
+
+                this.index -= 1;
+                return this.self.#dense[this.index];
+            },
+
+            /**
+             * To reset the iterator
+             */
+            reset() {
+                this.index = this.self.#length;
+            },
+        };
     }
 
 }

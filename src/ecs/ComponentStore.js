@@ -3,7 +3,7 @@
 import { DefaultSparseSetOptions, SparseSet } from "./SparseSet.js";
 
 /**
- * @import {SparseSetOptions} from './SparseSet.js'
+ * @import {SparseSetOptions, SparseSetIterator} from './SparseSet.js'
  * @import {EntityID} from './EntityHandle.js'
  */
 
@@ -15,6 +15,15 @@ import { DefaultSparseSetOptions, SparseSet } from "./SparseSet.js";
  * @typedef {object} RawComponentData
  * @property {ComponentArray} data - The component array reference.
  * @property {number} len - Number of active components.
+ */
+
+
+/**
+ * @typedef {object} CompStoreIterator
+ * @property {number} index The current index
+ * @property {ComponentStore} self The Current Store refrence
+ * @property {() => Component | null} next To get the next item in the store
+ * @property {() => void} reset To reset teh iterator
  */
 
 /** @typedef {new (...args: any[]) => any} ComponentConstructor */
@@ -323,4 +332,71 @@ export class ComponentStore {
         return SUCCESS_OPERATION;
     }
 
+    /**
+     * Iterator to Component Store
+     * @returns {CompStoreIterator} The iterator to the store
+     */
+    Iterator() {
+        return {
+            index: 0,
+            self: this,
+
+            /**
+             * The next Component in the CompStore
+             * @returns {Component | null} the next component
+             */
+            next() {
+                if (this.index >= this.self.len()) return null;
+                const comp = this.self.#components[this.index];
+
+                this.index += 1;
+                return comp;
+            },
+
+            /**
+             * To reset the Iterator
+             */
+            reset() {
+                this.index = 0;
+            },
+        };
+    }
+
+
+    /**
+     * Reverse Iterator to Component Store
+     * @returns {CompStoreIterator} The iterator to the store
+     */
+    ReverseIterator() {
+        return {
+            index: this.len(),
+            self: this,
+
+            /**
+             * The next Component in the CompStore
+             * @returns {Component | null} the next component
+             */
+            next() {
+                if (this.index <= 0) return null;
+
+                this.index -= 1;
+                return this.self.#components[this.index];
+            },
+
+            /**
+             * To reset the Iterator
+             */
+            reset() {
+                this.index = this.self.len();
+            },
+        };
+    }
+
+    /**
+     * Iterator to Entities in the sparse Set
+     * @returns {SparseSetIterator} the iterator to the sparse set
+     */
+    entityItrerator() {
+        return this.#set.Iterator();
+    }
 }
